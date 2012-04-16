@@ -1,0 +1,190 @@
+#!/bin/sh
+
+if [ -z "$1" ] || [ \( "$1" == "release" -a "$#" != 3 \) ] || [ \( "$1" == "merge" -a "$#" != 3 \) ] || [ \( "$1" == "checkout" -a "$#" != 2 \) ]; then
+    echo "=========================================================================="
+    echo " 使い方"
+    echo "--------------------------------------------------------------------------"
+    echo "以下を選択して、右クリックでコマンドに貼り付けてください"
+    echo ""
+    echo "▼新しい作業用ブランチの作成"
+    echo "dzgit [チケットの番号]_[チケットの意味]"
+    echo "例) dzgit 1111_fix_profile_photo"
+    echo ""
+    echo "▼リリース用ブランチの作成"
+    echo "dzgit release [生成元ブランチ名] [生成ブランチ名]"
+    echo "例) dzgit release master 20120412_profile_photo"
+    echo ""
+    echo "▼ブランチのマージ"
+    echo "dzgit merge [マージ先ブランチ名] [マージしたいブランチ名]"
+    echo "例) dzgit merge release/20120410_bugfixes feature/ticket-1111_fix_profile_photo"
+    echo ""
+    echo "▼新しいブランチのチェックアウト"
+    echo "dzgit checkout [ブランチ名]"
+    echo "例) dzgit checkout out feature/ticket-15253_video"
+    echo "=========================================================================="
+    exit
+fi
+
+
+if [ "$1" == "merge" ]; then
+
+git status
+
+echo "=========================================================================="
+echo " "$2"ブランチに"$3"ブランチをマージしていいですか？ [y/n]"
+echo "--------------------------------------------------------------------------"
+echo "git checkout -b "$3" origin/"$3
+echo "git checkout "$3
+echo "git pull origin "$3
+echo "git checkout -b "$2" origin/"$2
+echo "git checkout "$2
+echo "git pull origin "$2
+echo "git merge "$3
+echo "--------------------------------------------------------------------------"
+
+read ans
+if [ "$ans" != "y" ]; then
+    echo "キャンセルしました"
+    echo "=========================================================================="
+    git status
+    exit
+fi
+
+echo "=========================================================================="
+echo " "$3" -> "$2" マージされます。本当にいいですか？ [y/n]" 
+echo "=========================================================================="
+
+read ans
+if [ "$ans" != "y" ]; then
+    echo "キャンセルしました"
+    echo "=========================================================================="
+    git status
+    exit
+fi
+
+
+git checkout -b $3 origin/$3
+git checkout $3
+git pull origin $3
+git checkout -b $2 origin/$2
+git checkout $2
+git pull origin $2
+git merge $3
+
+echo "--------------------------------------------------------------------------"
+echo " "$2"ブランチをマージしました"
+echo "問題がなさそうならgit pushをしてください"
+echo "=========================================================================="
+
+git status
+exit
+fi
+
+if [ "$1" == "release" ]; then
+
+echo "=========================================================================="
+echo "  "$2"から、リリース用ブランチ release/"$3" を作っていいですか？ [y/n]"
+echo "--------------------------------------------------------------------------"
+echo "git fetch origin"
+echo "git checkout "$2
+echo "git pull origin "$2
+echo "git branch release/"$3
+echo "git checkout release/"$3
+echo "git push origin release/"$3
+echo "git branch -a"
+echo "=========================================================================="
+
+read ans
+if [ "$ans" != "y" ]; then
+    echo "キャンセルしました"
+    echo "=========================================================================="
+    git status
+    exit
+fi
+
+
+echo "=========================================================================="
+echo " "$2" ==> release/"$3" 本当にいいですか？ [y/n]"
+echo "=========================================================================="
+
+read ans
+if [ "$ans" != "y" ]; then
+    echo "キャンセルしました"
+    echo "=========================================================================="
+    git status
+    exit
+fi
+
+git fetch origin
+git checkout $2
+git pull origin $2
+git branch release/$3
+git checkout release/$3
+git push origin release/$3
+git branch -a
+
+echo "--------------------------------------------------------------------------"
+echo " リリース用ブランチ release/"$3" を作りました"
+echo "=========================================================================="
+
+git status
+exit
+fi
+
+if [ "$1" == "checkout" ]; then
+echo "=========================================================================="
+echo "  "$2"をチェックアウトしていいですか？ [y/n]"
+echo "--------------------------------------------------------------------------"
+echo "git checkout -b "$2" origin/"$2
+echo "git checkout "$2
+echo "=========================================================================="
+
+read ans
+if [ "$ans" != "y" ]; then
+    echo "キャンセルしました"
+    echo "=========================================================================="
+    git status
+    exit
+fi
+
+git checkout -b $2 origin/$2
+git checkout $2
+
+git status
+exit
+fi
+
+
+echo "=========================================================================="
+echo "  作業用ブランチ feature/ticket-"$1" を作っていいですか？ [y/n]"
+echo "--------------------------------------------------------------------------"
+echo "git fetch origin"
+echo "git checkout master"
+echo "git pull origin master"
+echo "git branch feature/ticket-"$1
+echo "git checkout feature/ticket-"$1
+echo "git push origin feature/ticket-"$1
+echo "git branch -a"
+echo "=========================================================================="
+
+read ans
+if [ "$ans" != "y" ]; then
+    echo "キャンセルしました"
+    echo "=========================================================================="
+    git status
+    exit
+fi
+
+git fetch origin
+git checkout master
+git pull origin master
+git branch feature/ticket-$1
+git checkout feature/ticket-$1
+git push origin feature/ticket-$1
+git branch -a
+
+echo "--------------------------------------------------------------------------"
+echo " 作業用ブランチ feature/ticket-"$1" を作りました"
+echo "=========================================================================="
+git status
+
