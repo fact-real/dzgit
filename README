@@ -19,6 +19,6 @@ dzgit merge [マージ先ブランチ名] [マージしたいブランチ名]
 
 ▼新しいブランチのチェックアウト
 dzgit checkout [ブランチ名]
-例) dzgit checkout out feature/ticket-15253_video
+例) dzgit checkout feature/ticket-15253_video
 ==========================================================================
 
