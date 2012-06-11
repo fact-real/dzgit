@@ -35,6 +35,7 @@ IFS=','
 echo "=========================================================================="
 echo " "$2"ブランチに"$3"ブランチをマージしていいですか？ [y/n]"
 echo "--------------------------------------------------------------------------"
+echo "git fetch origin"
 for branch in $3; do
     echo "git checkout -b "$branch" origin/"$branch
     echo "git checkout "$branch
@@ -68,6 +69,7 @@ if [ "$ans" != "y" ]; then
     exit
 fi
 
+git fetch origin
 for branch in $3; do
     git checkout -b $branch origin/$branch
     git checkout $branch
