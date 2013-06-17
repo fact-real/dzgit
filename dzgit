@@ -16,12 +16,12 @@ if [ -z "$1" ] || [ \( "$1" == "release" -a "$#" != 3 \) ] || [ \( "$1" == "merg
     echo ""
     echo "▼ブランチのマージ"
     echo "dzgit merge [マージ先ブランチ名] [マージしたいブランチ名(,区切りで複数指定可)]"
-    echo "例) dzgit merge release/20120410_bugfixes feature/ticket-1111_fix_profile_photo"
+    echo "例) dzgit merge release/20120410_bugfixes feature/1111_fix_profile_photo"
     echo "    dzgit merge release/20120410_bugfixes XXX,YYY,ZZZ"
     echo ""
     echo "▼新しいブランチのチェックアウト"
     echo "dzgit checkout [ブランチ名]"
-    echo "例) dzgit checkout feature/ticket-15253_video"
+    echo "例) dzgit checkout feature/15253_video"
     echo "=========================================================================="
     exit
 fi
@@ -169,14 +169,14 @@ fi
 
 
 echo "=========================================================================="
-echo "  作業用ブランチ feature/ticket-"$1" を作っていいですか？ [y/n]"
+echo "  作業用ブランチ feature/"$1" を作っていいですか？ [y/n]"
 echo "--------------------------------------------------------------------------"
 echo "git fetch origin"
 echo "git checkout master"
 echo "git pull origin master"
-echo "git branch feature/ticket-"$1
-echo "git checkout feature/ticket-"$1
-echo "git push origin feature/ticket-"$1
+echo "git branch feature/"$1
+echo "git checkout feature/"$1
+echo "git push origin feature/"$1
 echo "git branch -a"
 echo "=========================================================================="
 
@@ -191,13 +191,13 @@ fi
 git fetch origin
 git checkout master
 git pull origin master
-git branch feature/ticket-$1
-git checkout feature/ticket-$1
-git push origin feature/ticket-$1
+git branch feature/$1
+git checkout feature/$1
+git push origin feature/$1
 git branch -a
 
 echo "--------------------------------------------------------------------------"
-echo " 作業用ブランチ feature/ticket-"$1" を作りました"
+echo " 作業用ブランチ feature/"$1" を作りました"
 echo "=========================================================================="
 git status
 
